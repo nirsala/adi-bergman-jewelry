@@ -1,0 +1,14 @@
+[
+  {
+    "id": "admin-001",
+    "username": "admin",
+    "password": "$2b$10$CXBWmxxoDd9ELcqvdTUEquLbFPFADySHgNk6bOb0pAbUWVH.zIoK2",
+    "name": "Adi Bergman",
+    "email": "admin@adibergman.com",
+    "phone": "",
+    "role": "admin",
+    "status": "approved",
+    "discountPercent": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+]
