@@ -27,14 +27,13 @@ export default function FeaturedProducts() {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-20 bg-cream">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="py-16 md:py-24 bg-white">
+      <div className="max-w-[1200px] mx-auto px-5 md:px-10">
         <div className="text-center mb-12">
-          <h2 className="font-heading text-4xl font-bold text-charcoal mb-4">פריטים נבחרים</h2>
-          <div className="w-16 h-0.5 bg-gold mx-auto mb-4" />
-          <p className="text-gray-500">התכשיטים הפופולריים ביותר שלנו</p>
+          <h2 className="font-heading text-[28px] md:text-[36px] text-text mb-3">Best Sellers</h2>
+          <div className="w-8 h-[1px] bg-accent mx-auto" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-10 stagger-children">
           {products.slice(0, 4).map(product => (
             <div key={product.id} className="animate-fade-in-up opacity-0">
               <ProductCard product={product} />

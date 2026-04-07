@@ -2,110 +2,126 @@ import HeroVideo from '@/components/HeroVideo';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import Link from 'next/link';
 
+const categories = [
+  { name: 'טבעות', slug: 'rings', emoji: '💍' },
+  { name: 'שרשראות', slug: 'necklaces', emoji: '📿' },
+  { name: 'עגילים', slug: 'earrings', emoji: '✨' },
+  { name: 'צמידים', slug: 'bracelets', emoji: '⌚' },
+  { name: 'New', slug: '', emoji: '🌟' },
+  { name: 'Best', slug: '', emoji: '❤️' },
+];
+
 export default function HomePage() {
   return (
     <>
       <HeroVideo />
 
-      {/* Featured Products */}
-      <FeaturedProducts />
-
-      {/* About Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="font-heading text-4xl font-bold text-charcoal mb-6">
-                אודות <span className="text-gold">עדי ברגמן</span>
-              </h2>
-              <div className="w-16 h-0.5 bg-gold mb-6" />
-              <p className="text-gray-600 leading-relaxed mb-4 text-lg">
-                עדי ברגמן מתמחה בעיצוב תכשיטי מויסנייט יוקרתיים, המשלבים מלאכת יד מדויקת עם חומרים איכותיים.
-              </p>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                כל תכשיט מעוצב בקפידה כדי להעניק ברק ויופי שמתחרים ביהלומים הטובים ביותר.
-                מויסנייט הוא אבן חן מדהימה בעלת מדד שבירה גבוה מיהלום, המעניקה זוהר וניצוצות ברמה שאין שני לה.
-              </p>
-              <div className="grid grid-cols-3 gap-4 mt-8">
-                <div className="text-center p-4 bg-cream rounded-lg">
-                  <div className="text-2xl font-heading font-bold text-gold">100%</div>
-                  <div className="text-sm text-gray-500 mt-1">אתי ובר-קיימא</div>
-                </div>
-                <div className="text-center p-4 bg-cream rounded-lg">
-                  <div className="text-2xl font-heading font-bold text-gold">14K+</div>
-                  <div className="text-sm text-gray-500 mt-1">זהב אמיתי</div>
-                </div>
-                <div className="text-center p-4 bg-cream rounded-lg">
-                  <div className="text-2xl font-heading font-bold text-gold">GRA</div>
-                  <div className="text-sm text-gray-500 mt-1">תעודת מקוריות</div>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-gold/10 via-rose-light/30 to-gold/10 rounded-2xl flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-8xl mb-4">💎</div>
-                  <p className="text-gray-400 text-sm">תמונת הסטודיו של עדי</p>
-                </div>
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gold/10 rounded-full" />
-              <div className="absolute -top-4 -left-4 w-16 h-16 bg-rose-light/30 rounded-full" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="py-20 bg-cream">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-4xl font-bold text-charcoal mb-4">הקולקציות שלנו</h2>
-            <div className="w-16 h-0.5 bg-gold mx-auto" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: 'טבעות', slug: 'rings', emoji: '💍' },
-              { name: 'שרשראות', slug: 'necklaces', emoji: '📿' },
-              { name: 'עגילים', slug: 'earrings', emoji: '✨' },
-              { name: 'צמידים', slug: 'bracelets', emoji: '⌚' },
-            ].map((cat) => (
+      {/* Category Circles — She-Ra style */}
+      <section className="py-10 bg-white border-b border-border">
+        <div className="max-w-[900px] mx-auto px-5">
+          <div className="flex justify-center gap-6 md:gap-10 overflow-x-auto">
+            {categories.map((cat) => (
               <Link
-                key={cat.slug}
-                href={`/products?category=${cat.slug}`}
-                className="group relative bg-white rounded-xl p-8 text-center shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100"
+                key={cat.name}
+                href={cat.slug ? `/products?category=${cat.slug}` : '/products'}
+                className="flex flex-col items-center gap-2 group flex-shrink-0"
               >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{cat.emoji}</div>
-                <h3 className="font-heading text-xl font-semibold text-charcoal group-hover:text-gold-dark transition-colors">
+                <div className="w-[70px] h-[70px] md:w-[85px] md:h-[85px] rounded-full bg-[#f5f0ec] border-2 border-transparent group-hover:border-accent flex items-center justify-center transition-all duration-300">
+                  <span className="text-2xl md:text-3xl opacity-50 group-hover:opacity-80 transition-opacity">{cat.emoji}</span>
+                </div>
+                <span className="text-[12px] text-text-muted group-hover:text-accent transition-colors tracking-wide">
                   {cat.name}
-                </h3>
-                <div className="w-8 h-0.5 bg-gold mx-auto mt-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </span>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-charcoal text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="font-heading text-4xl font-bold mb-4">
-            מעוניינים ב<span className="text-gold">מחירי סיטונאות</span>?
+      {/* Featured Products */}
+      <FeaturedProducts />
+
+      {/* Full-width Image Banner */}
+      <section className="relative h-[50vh] min-h-[350px] bg-[#e8e0d8] overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-float opacity-15">
+            <svg width="200" height="200" viewBox="0 0 300 300" fill="none">
+              <ellipse cx="150" cy="200" rx="80" ry="30" stroke="#e6907f" strokeWidth="2" fill="none" />
+              <polygon points="150,80 180,130 150,160 120,130" fill="none" stroke="#e6907f" strokeWidth="1.5" />
+              <line x1="135" y1="155" x2="130" y2="185" stroke="#e6907f" strokeWidth="1.5" />
+              <line x1="165" y1="155" x2="170" y2="185" stroke="#e6907f" strokeWidth="1.5" />
+            </svg>
+          </div>
+        </div>
+        <div className="relative h-full flex items-center justify-center z-10">
+          <div className="text-center px-5">
+            <h2 className="font-heading text-[32px] md:text-[48px] text-text mb-4">מויסנייט — הברק האמיתי</h2>
+            <p className="text-text-light text-[15px] max-w-md mx-auto mb-8">
+              אבן חן בעלת מדד שבירה גבוה מיהלום, המעניקה זוהר וניצוצות ברמה שאין שני לה
+            </p>
+            <Link href="/products" className="btn-primary">
+              גלו את הקולקציה
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-[1000px] mx-auto px-5 md:px-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+            <div>
+              <h2 className="font-heading text-[28px] md:text-[36px] text-text mb-5">
+                אודות עדי ברגמן
+              </h2>
+              <div className="w-8 h-[1px] bg-accent mb-6" />
+              <p className="text-text-light text-[15px] leading-[1.8] mb-4">
+                עדי ברגמן מתמחה בעיצוב תכשיטי מויסנייט יוקרתיים, המשלבים מלאכת יד מדויקת עם חומרים איכותיים.
+              </p>
+              <p className="text-text-light text-[15px] leading-[1.8] mb-8">
+                כל תכשיט מעוצב בקפידה כדי להעניק ברק ויופי שמתחרים ביהלומים הטובים ביותר.
+              </p>
+              <div className="flex gap-8">
+                <div className="text-center">
+                  <div className="font-heading text-[24px] text-accent">100%</div>
+                  <div className="text-[12px] text-text-muted tracking-wide mt-1">אתי ובר-קיימא</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-heading text-[24px] text-accent">14K+</div>
+                  <div className="text-[12px] text-text-muted tracking-wide mt-1">זהב אמיתי</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-heading text-[24px] text-accent">GRA</div>
+                  <div className="text-[12px] text-text-muted tracking-wide mt-1">תעודת מקוריות</div>
+                </div>
+              </div>
+            </div>
+            <div className="aspect-[4/5] bg-[#f5f0ec] rounded-sm flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-7xl mb-3 opacity-30">💎</div>
+                <p className="text-text-muted text-[13px]">תמונת הסטודיו של עדי</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Wholesale CTA */}
+      <section className="py-16 md:py-20 bg-[#f5f0ec]">
+        <div className="max-w-[600px] mx-auto px-5 text-center">
+          <h2 className="font-heading text-[28px] md:text-[36px] text-text mb-4">
+            מחירי סיטונאות
           </h2>
-          <p className="text-gray-300 mb-8 text-lg">
+          <div className="w-8 h-[1px] bg-accent mx-auto mb-5" />
+          <p className="text-text-light text-[15px] mb-8 leading-[1.8]">
             הירשמו כלקוח עסקי וקבלו גישה למחירים מיוחדים בהתאמה אישית
           </p>
           <div className="flex gap-4 justify-center">
-            <Link
-              href="/register"
-              className="px-8 py-3 bg-gold text-charcoal font-semibold rounded-sm hover:bg-gold-light transition-all text-lg"
-            >
+            <Link href="/register" className="btn-primary">
               הרשמה כלקוח
             </Link>
-            <Link
-              href="/products"
-              className="px-8 py-3 border-2 border-gold text-gold font-semibold rounded-sm hover:bg-gold/10 transition-all text-lg"
-            >
-              צפייה בקולקציה
+            <Link href="/products" className="btn-outline">
+              לקולקציה
             </Link>
           </div>
         </div>

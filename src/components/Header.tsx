@@ -9,112 +9,101 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="bg-charcoal text-white sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-charcoal font-bold text-lg font-heading">
-              AB
-            </div>
-            <div>
-              <div className="text-lg font-heading font-semibold tracking-wide text-gold">Adi Bergman</div>
-              <div className="text-xs text-gray-400 -mt-1">Moissanite Jewelry</div>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm hover:text-gold transition-colors">דף הבית</Link>
-            <Link href="/products" className="text-sm hover:text-gold transition-colors">קולקציה</Link>
-            <Link href="/products?category=rings" className="text-sm hover:text-gold transition-colors">טבעות</Link>
-            <Link href="/products?category=necklaces" className="text-sm hover:text-gold transition-colors">שרשראות</Link>
-            <Link href="/products?category=earrings" className="text-sm hover:text-gold transition-colors">עגילים</Link>
-            <Link href="/products?category=bracelets" className="text-sm hover:text-gold transition-colors">צמידים</Link>
-          </nav>
-
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
-            {user ? (
-              <>
-                {user.role === 'admin' && (
-                  <Link href="/admin" className="text-sm text-gold hover:text-gold-light transition-colors">
-                    ניהול
-                  </Link>
-                )}
-                <Link href="/account" className="text-sm hover:text-gold transition-colors">
-                  שלום, {user.name}
-                </Link>
-                <button
-                  onClick={logout}
-                  className="text-sm px-4 py-2 border border-gold/30 rounded hover:bg-gold/10 transition-colors"
-                >
-                  התנתק
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-sm px-5 py-2 bg-gold text-charcoal rounded font-medium hover:bg-gold-light transition-colors"
-                >
-                  התחברות
-                </Link>
-                <Link
-                  href="/register"
-                  className="text-sm px-5 py-2 border border-gold/30 rounded hover:bg-gold/10 transition-colors"
-                >
-                  הרשמה
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-white p-2"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {menuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-700">
-            <nav className="flex flex-col gap-3 pt-4">
-              <Link href="/" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">דף הבית</Link>
-              <Link href="/products" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">קולקציה</Link>
-              <Link href="/products?category=rings" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">טבעות</Link>
-              <Link href="/products?category=necklaces" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">שרשראות</Link>
-              <Link href="/products?category=earrings" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">עגילים</Link>
-              <Link href="/products?category=bracelets" onClick={() => setMenuOpen(false)} className="hover:text-gold transition-colors">צמידים</Link>
-              <div className="border-t border-gray-700 pt-3 mt-2 flex flex-col gap-2">
-                {user ? (
-                  <>
-                    {user.role === 'admin' && (
-                      <Link href="/admin" onClick={() => setMenuOpen(false)} className="text-gold">ניהול</Link>
-                    )}
-                    <Link href="/account" onClick={() => setMenuOpen(false)}>שלום, {user.name}</Link>
-                    <button onClick={() => { logout(); setMenuOpen(false); }} className="text-right text-gray-400">התנתק</button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/login" onClick={() => setMenuOpen(false)} className="text-gold">התחברות</Link>
-                    <Link href="/register" onClick={() => setMenuOpen(false)}>הרשמה</Link>
-                  </>
-                )}
-              </div>
-            </nav>
-          </div>
-        )}
+    <>
+      {/* Announcement Bar */}
+      <div className="bg-accent-light text-center py-2.5 text-sm tracking-wide text-text">
+        Adi Bergman — תכשיטי מויסנייט בעיצוב אישי
       </div>
-    </header>
+
+      {/* Main Header */}
+      <header className="bg-white sticky top-0 z-50" style={{ boxShadow: '0 0 1px rgba(0,0,0,0.2)' }}>
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10">
+          <div className="flex items-center justify-between h-[70px]">
+            {/* Right: Navigation */}
+            <nav className="hidden md:flex items-center gap-7">
+              <Link href="/products" className="text-[13px] tracking-[0.05em] uppercase text-text hover:text-accent transition-colors">Shop</Link>
+              <Link href="/products?category=rings" className="text-[13px] tracking-[0.05em] uppercase text-text hover:text-accent transition-colors">טבעות</Link>
+              <Link href="/products?category=necklaces" className="text-[13px] tracking-[0.05em] uppercase text-text hover:text-accent transition-colors">שרשראות</Link>
+              <Link href="/products?category=earrings" className="text-[13px] tracking-[0.05em] uppercase text-text hover:text-accent transition-colors">עגילים</Link>
+              <Link href="/products?category=bracelets" className="text-[13px] tracking-[0.05em] uppercase text-text hover:text-accent transition-colors">צמידים</Link>
+            </nav>
+
+            {/* Center: Logo */}
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+              <h1 className="font-heading text-[28px] md:text-[34px] tracking-[0.15em] text-text whitespace-nowrap">
+                ADI<span className="text-accent mx-1">&#x2726;</span>BERGMAN
+              </h1>
+            </Link>
+
+            {/* Left: Icons */}
+            <div className="hidden md:flex items-center gap-5">
+              {user ? (
+                <>
+                  {user.role === 'admin' && (
+                    <Link href="/admin" className="text-[13px] tracking-[0.05em] uppercase text-accent hover:text-accent/70 transition-colors">
+                      ניהול
+                    </Link>
+                  )}
+                  <Link href="/account" title={user.name}>
+                    <svg className="w-5 h-5 text-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </Link>
+                  <button onClick={logout} className="text-[12px] text-text-muted hover:text-accent transition-colors">
+                    התנתק
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" title="התחברות">
+                    <svg className="w-5 h-5 text-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-text p-2">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {menuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {menuOpen && (
+            <div className="md:hidden pb-6 border-t border-border animate-fade-in">
+              <nav className="flex flex-col gap-4 pt-5 text-center">
+                <Link href="/products" onClick={() => setMenuOpen(false)} className="text-[13px] tracking-[0.05em] uppercase hover:text-accent">Shop</Link>
+                <Link href="/products?category=rings" onClick={() => setMenuOpen(false)} className="text-[13px] tracking-[0.05em] uppercase hover:text-accent">טבעות</Link>
+                <Link href="/products?category=necklaces" onClick={() => setMenuOpen(false)} className="text-[13px] tracking-[0.05em] uppercase hover:text-accent">שרשראות</Link>
+                <Link href="/products?category=earrings" onClick={() => setMenuOpen(false)} className="text-[13px] tracking-[0.05em] uppercase hover:text-accent">עגילים</Link>
+                <Link href="/products?category=bracelets" onClick={() => setMenuOpen(false)} className="text-[13px] tracking-[0.05em] uppercase hover:text-accent">צמידים</Link>
+                <div className="border-t border-border pt-4 mt-2 flex flex-col gap-3">
+                  {user ? (
+                    <>
+                      {user.role === 'admin' && <Link href="/admin" onClick={() => setMenuOpen(false)} className="text-accent text-sm">ניהול</Link>}
+                      <Link href="/account" onClick={() => setMenuOpen(false)} className="text-sm">{user.name}</Link>
+                      <button onClick={() => { logout(); setMenuOpen(false); }} className="text-text-muted text-sm">התנתק</button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login" onClick={() => setMenuOpen(false)} className="text-sm">התחברות</Link>
+                      <Link href="/register" onClick={() => setMenuOpen(false)} className="text-sm text-accent">הרשמה</Link>
+                    </>
+                  )}
+                </div>
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+    </>
   );
 }
