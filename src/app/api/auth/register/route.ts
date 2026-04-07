@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     role: 'customer' as const,
     status: 'pending' as const,
     discountPercent: 0,
+    customerGroup: 'new' as const,
     createdAt: new Date().toISOString(),
   };
 

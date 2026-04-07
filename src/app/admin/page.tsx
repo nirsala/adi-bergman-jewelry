@@ -112,6 +112,17 @@ export default function AdminDashboard() {
                 </span>
               )}
             </Link>
+            <Link href="/admin/orders" className="flex items-center justify-between p-4 border border-border hover:border-accent/30 transition-colors group">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📦</span>
+                <span className="text-[14px] text-text group-hover:text-accent transition-colors">ניהול הזמנות</span>
+              </div>
+              {(stats?.submittedCarts || 0) > 0 && (
+                <span className="text-[11px] px-2 py-0.5 bg-green-100 text-green-700 rounded">
+                  {stats?.submittedCarts}
+                </span>
+              )}
+            </Link>
           </div>
 
           {/* Activity Feed */}

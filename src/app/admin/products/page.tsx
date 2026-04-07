@@ -16,6 +16,7 @@ interface Product {
   images: string[];
   inStock: boolean;
   featured: boolean;
+  minOrderQty: number;
 }
 
 const categoryNames: Record<string, string> = {
@@ -37,7 +38,7 @@ export default function AdminProductsPage() {
   const [filterCategory, setFilterCategory] = useState('');
   const [form, setForm] = useState({
     name: '', nameHe: '', description: '', descriptionHe: '',
-    category: 'rings', basePrice: '', inStock: true, featured: false,
+    category: 'rings', basePrice: '', inStock: true, featured: false, minOrderQty: '1',
   });
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function AdminProductsPage() {
   useEffect(() => { if (user?.role === 'admin') fetchProducts(); }, [user]);
 
   const resetForm = () => {
-    setForm({ name: '', nameHe: '', description: '', descriptionHe: '', category: 'rings', basePrice: '', inStock: true, featured: false });
+    setForm({ name: '', nameHe: '', description: '', descriptionHe: '', category: 'rings', basePrice: '', inStock: true, featured: false, minOrderQty: '1' });
     setPendingFiles([]);
     setExistingImages([]);
     setEditProduct(null);
@@ -64,6 +65,7 @@ export default function AdminProductsPage() {
     const body = {
       ...form,
       basePrice: Number(form.basePrice),
+      minOrderQty: Number(form.minOrderQty) || 1,
       images: existingImages,
       ...(editProduct ? { id: editProduct.id } : {}),
     };
@@ -118,6 +120,7 @@ export default function AdminProductsPage() {
       basePrice: String(product.basePrice),
       inStock: product.inStock,
       featured: product.featured,
+      minOrderQty: String(product.minOrderQty || 1),
     });
     setExistingImages(product.images?.filter(img => !img.includes('placeholder')) || []);
     setPendingFiles([]);
@@ -206,6 +209,11 @@ export default function AdminProductsPage() {
                 <label className="block text-[12px] text-text-muted mb-1 tracking-wide">מחיר בסיס (₪)</label>
                 <input type="number" value={form.basePrice} onChange={e => setForm({ ...form, basePrice: e.target.value })}
                   className="w-full px-3 py-2.5 border border-border text-[14px] focus:border-accent outline-none" required min="0" />
+              </div>
+              <div>
+                <label className="block text-[12px] text-text-muted mb-1 tracking-wide">כמות מינימלית להזמנה (MOQ)</label>
+                <input type="number" value={form.minOrderQty} onChange={e => setForm({ ...form, minOrderQty: e.target.value })}
+                  className="w-full px-3 py-2.5 border border-border text-[14px] focus:border-accent outline-none" min="1" />
               </div>
               <div className="flex items-center gap-6">
                 <label className="flex items-center gap-2 cursor-pointer">

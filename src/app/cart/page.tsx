@@ -131,6 +131,13 @@ export default function CartPage() {
               ))}
             </div>
 
+            {/* Min Order Warning */}
+            {cart.total < 1000 && (
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 text-[13px] text-amber-700 text-center">
+                סכום הזמנה מינימלי: ₪1,000 | סכום נוכחי: ₪{cart.total.toLocaleString()} — חסרים עוד ₪{(1000 - cart.total).toLocaleString()}
+              </div>
+            )}
+
             {/* Cart Summary */}
             <div className="mt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <button

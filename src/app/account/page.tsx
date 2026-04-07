@@ -3,6 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function AccountPage() {
   const { user, loading, logout } = useAuth();
@@ -53,9 +54,27 @@ export default function AccountPage() {
             </div>
           </div>
 
+          {/* Quick Links */}
+          {user.status === 'approved' && (
+            <div className="mt-6 pt-6 border-t border-border space-y-3">
+              <Link href="/account/orders" className="flex items-center justify-between p-3 hover:bg-[#f5f0ec] transition-colors">
+                <span className="text-[14px]">ההזמנות שלי</span>
+                <span className="text-[13px] text-accent">→</span>
+              </Link>
+              <Link href="/cart" className="flex items-center justify-between p-3 hover:bg-[#f5f0ec] transition-colors">
+                <span className="text-[14px]">העגלה שלי</span>
+                <span className="text-[13px] text-accent">→</span>
+              </Link>
+              <a href="/api/catalog" className="flex items-center justify-between p-3 hover:bg-[#f5f0ec] transition-colors">
+                <span className="text-[14px]">הורד קטלוג מחירים (CSV)</span>
+                <span className="text-[13px] text-accent">↓</span>
+              </a>
+            </div>
+          )}
+
           <button
             onClick={() => { logout(); router.push('/'); }}
-            className="btn-outline w-full text-center mt-8"
+            className="btn-outline w-full text-center mt-6"
           >
             התנתק
           </button>

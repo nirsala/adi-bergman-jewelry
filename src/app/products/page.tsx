@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import { Suspense } from 'react';
@@ -23,23 +23,68 @@ const categories = [
   { slug: 'bracelets', name: 'צמידים' },
 ];
 
+const sortOptions = [
+  { value: 'default', label: 'מומלץ' },
+  { value: 'price-asc', label: 'מחיר: נמוך לגבוה' },
+  { value: 'price-desc', label: 'מחיר: גבוה לנמוך' },
+  { value: 'newest', label: 'חדש ביותר' },
+  { value: 'name', label: 'שם (א-ת)' },
+];
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category') || '';
-  const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState(categoryParam);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('default');
 
   useEffect(() => { setActiveCategory(categoryParam); }, [categoryParam]);
 
   useEffect(() => {
     setLoading(true);
-    const url = activeCategory ? `/api/products?category=${activeCategory}` : '/api/products';
-    fetch(url)
+    fetch('/api/products')
       .then(res => res.json())
-      .then(data => { setProducts(data.products || []); setLoading(false); })
+      .then(data => { setAllProducts(data.products || []); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [activeCategory]);
+  }, []);
+
+  const filtered = useMemo(() => {
+    let result = [...allProducts];
+
+    // Category filter
+    if (activeCategory) {
+      result = result.filter(p => p.category === activeCategory);
+    }
+
+    // Search
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      result = result.filter(p =>
+        p.nameHe.includes(searchQuery.trim()) ||
+        p.name.toLowerCase().includes(q)
+      );
+    }
+
+    // Sort
+    switch (sortBy) {
+      case 'price-asc':
+        result.sort((a, b) => (a.basePrice || 0) - (b.basePrice || 0));
+        break;
+      case 'price-desc':
+        result.sort((a, b) => (b.basePrice || 0) - (a.basePrice || 0));
+        break;
+      case 'newest':
+        result.sort((a, b) => b.id.localeCompare(a.id));
+        break;
+      case 'name':
+        result.sort((a, b) => a.nameHe.localeCompare(b.nameHe, 'he'));
+        break;
+    }
+
+    return result;
+  }, [allProducts, activeCategory, searchQuery, sortBy]);
 
   return (
     <div className="min-h-[75vh] py-12 md:py-16">
@@ -49,8 +94,8 @@ function ProductsContent() {
           <div className="w-8 h-[1px] bg-accent mx-auto mt-3" />
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2 justify-center mb-6">
           {categories.map(cat => (
             <button
               key={cat.slug}
@@ -66,6 +111,29 @@ function ProductsContent() {
           ))}
         </div>
 
+        {/* Search + Sort */}
+        <div className="flex flex-wrap gap-3 justify-between items-center mb-8">
+          <input
+            type="text"
+            placeholder="חיפוש מוצר..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="px-4 py-2 border border-border text-[13px] focus:border-accent outline-none w-64"
+          />
+          <div className="flex items-center gap-3">
+            <span className="text-[12px] text-text-muted">{filtered.length} מוצרים</span>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="px-3 py-2 border border-border text-[13px] focus:border-accent outline-none"
+            >
+              {sortOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         {/* Grid */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-10">
@@ -79,13 +147,13 @@ function ProductsContent() {
               </div>
             ))}
           </div>
-        ) : products.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20 text-text-muted">
-            <p className="text-[15px]">אין מוצרים בקטגוריה זו</p>
+            <p className="text-[15px]">{searchQuery ? 'לא נמצאו תוצאות' : 'אין מוצרים בקטגוריה זו'}</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-10 stagger-children">
-            {products.map(product => (
+            {filtered.map(product => (
               <div key={product.id} className="animate-fade-in-up opacity-0">
                 <ProductCard product={product} />
               </div>

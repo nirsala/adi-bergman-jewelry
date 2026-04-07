@@ -20,6 +20,7 @@ export function ensureAdminUser() {
       role: 'admin',
       status: 'approved',
       discountPercent: 0,
+      customerGroup: 'vip',
       createdAt: new Date().toISOString(),
     });
     saveUsers(users);

@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
     images: body.images || [],
     inStock: body.inStock !== false,
     featured: body.featured === true,
+    minOrderQty: Number(body.minOrderQty) || 1,
     createdAt: new Date().toISOString(),
   };
 

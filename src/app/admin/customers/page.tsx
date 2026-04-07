@@ -14,8 +14,12 @@ interface Customer {
   role: string;
   status: string;
   discountPercent: number;
+  customerGroup?: string;
   createdAt: string;
 }
+
+const groupLabels: Record<string, string> = { new: 'חדש', regular: 'רגיל', vip: 'VIP' };
+const groupDefaults: Record<string, number> = { new: 0, regular: 10, vip: 20 };
 
 export default function AdminCustomersPage() {
   const { user, loading } = useAuth();
@@ -24,23 +28,17 @@ export default function AdminCustomersPage() {
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'admin')) {
-      router.push('/login');
-    }
+    if (!loading && (!user || user.role !== 'admin')) router.push('/login');
   }, [user, loading, router]);
 
   const fetchCustomers = () => {
-    fetch('/api/admin/users')
-      .then(r => r.json())
-      .then(data => {
-        setCustomers((data.users || []).filter((u: Customer) => u.role === 'customer'));
-        setLoadingData(false);
-      });
+    fetch('/api/admin/users').then(r => r.json()).then(data => {
+      setCustomers((data.users || []).filter((u: Customer) => u.role === 'customer'));
+      setLoadingData(false);
+    });
   };
 
-  useEffect(() => {
-    if (user?.role === 'admin') fetchCustomers();
-  }, [user]);
+  useEffect(() => { if (user?.role === 'admin') fetchCustomers(); }, [user]);
 
   const updateCustomer = async (id: string, updates: Record<string, unknown>) => {
     await fetch(`/api/admin/users/${id}`, {
@@ -51,8 +49,13 @@ export default function AdminCustomersPage() {
     fetchCustomers();
   };
 
+  const setGroup = async (id: string, group: string) => {
+    const defaultDiscount = groupDefaults[group] || 0;
+    await updateCustomer(id, { customerGroup: group, discountPercent: defaultDiscount });
+  };
+
   if (loading || !user || user.role !== 'admin') {
-    return <div className="min-h-[80vh] flex items-center justify-center"><div className="text-gold">טוען...</div></div>;
+    return <div className="min-h-[75vh] flex items-center justify-center"><div className="text-accent">טוען...</div></div>;
   }
 
   const statusLabels: Record<string, { text: string; className: string }> = {
@@ -62,95 +65,86 @@ export default function AdminCustomersPage() {
   };
 
   return (
-    <div className="min-h-[80vh] py-12">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-[75vh] py-12">
+      <div className="max-w-[1100px] mx-auto px-5 md:px-10">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-heading text-3xl font-bold text-charcoal">ניהול לקוחות</h1>
-            <p className="text-gray-500 mt-1">אשר לקוחות והגדר הנחות אישיות</p>
+            <h1 className="font-heading text-[28px] text-text">ניהול לקוחות</h1>
+            <p className="text-[14px] text-text-muted mt-1">אשר לקוחות, הגדר קבוצות והנחות</p>
           </div>
-          <Link href="/admin" className="text-gold hover:text-gold-dark transition-colors">
-            ← חזרה ללוח בקרה
-          </Link>
+          <Link href="/admin" className="text-accent text-[13px] hover:underline">← חזרה ללוח בקרה</Link>
         </div>
 
         {loadingData ? (
-          <div className="text-center py-20 text-gray-400">טוען...</div>
+          <div className="text-center py-16 text-text-muted">טוען...</div>
         ) : customers.length === 0 ? (
-          <div className="text-center py-20 text-gray-400">
-            <div className="text-5xl mb-4">👥</div>
-            <p>אין לקוחות רשומים עדיין</p>
+          <div className="text-center py-16">
+            <div className="text-4xl mb-4 opacity-30">👥</div>
+            <p className="text-text-muted">אין לקוחות רשומים עדיין</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="border border-border bg-white overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-right">
-                <thead className="bg-gray-50 border-b border-gray-200">
+              <table className="w-full text-right text-[13px]">
+                <thead className="bg-[#f5f0ec] border-b border-border">
                   <tr>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">שם</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">שם משתמש</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">אימייל</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">טלפון</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">סטטוס</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">הנחה %</th>
-                    <th className="px-6 py-4 text-sm font-medium text-gray-500">פעולות</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">שם</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">אימייל / טלפון</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">סטטוס</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">קבוצה</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">הנחה %</th>
+                    <th className="px-4 py-3 text-text-muted tracking-wide">פעולות</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-border/50">
                   {customers.map(customer => (
-                    <tr key={customer.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 font-medium text-charcoal">{customer.name}</td>
-                      <td className="px-6 py-4 text-gray-500">{customer.username}</td>
-                      <td className="px-6 py-4 text-gray-500">{customer.email || '-'}</td>
-                      <td className="px-6 py-4 text-gray-500">{customer.phone || '-'}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusLabels[customer.status]?.className || 'bg-gray-100 text-gray-600'}`}>
+                    <tr key={customer.id} className="hover:bg-[#faf9f7] transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="font-medium text-text">{customer.name}</div>
+                        <div className="text-[11px] text-text-muted">@{customer.username}</div>
+                      </td>
+                      <td className="px-4 py-3 text-text-muted">
+                        <div>{customer.email || '-'}</div>
+                        <div>{customer.phone || ''}</div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`text-[11px] px-2 py-1 rounded ${statusLabels[customer.status]?.className || 'bg-gray-100'}`}>
                           {statusLabels[customer.status]?.text || customer.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3">
+                        <select
+                          value={customer.customerGroup || 'new'}
+                          onChange={e => setGroup(customer.id, e.target.value)}
+                          className="text-[12px] px-2 py-1 border border-border focus:border-accent outline-none"
+                        >
+                          <option value="new">חדש (0%)</option>
+                          <option value="regular">רגיל (10%)</option>
+                          <option value="vip">VIP (20%)</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-3">
                         <input
                           type="number"
-                          min="0"
-                          max="100"
+                          min="0" max="100"
                           value={customer.discountPercent}
                           onChange={e => updateCustomer(customer.id, { discountPercent: Number(e.target.value) })}
-                          className="w-20 px-2 py-1 border border-gray-200 rounded text-center focus:ring-2 focus:ring-gold/50 focus:border-gold outline-none"
+                          className="w-16 px-2 py-1 border border-border text-center text-[12px] focus:border-accent outline-none"
                         />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3">
                         <div className="flex gap-2">
                           {customer.status === 'pending' && (
                             <>
-                              <button
-                                onClick={() => updateCustomer(customer.id, { status: 'approved' })}
-                                className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
-                              >
-                                אשר
-                              </button>
-                              <button
-                                onClick={() => updateCustomer(customer.id, { status: 'rejected' })}
-                                className="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors"
-                              >
-                                דחה
-                              </button>
+                              <button onClick={() => updateCustomer(customer.id, { status: 'approved' })} className="px-2 py-1 text-[11px] bg-green-100 text-green-700 hover:bg-green-200 transition-colors">אשר</button>
+                              <button onClick={() => updateCustomer(customer.id, { status: 'rejected' })} className="px-2 py-1 text-[11px] bg-red-50 text-red-500 hover:bg-red-100 transition-colors">דחה</button>
                             </>
                           )}
                           {customer.status === 'approved' && (
-                            <button
-                              onClick={() => updateCustomer(customer.id, { status: 'rejected' })}
-                              className="px-3 py-1 bg-red-100 text-red-700 text-xs rounded hover:bg-red-200 transition-colors"
-                            >
-                              חסום
-                            </button>
+                            <button onClick={() => updateCustomer(customer.id, { status: 'rejected' })} className="px-2 py-1 text-[11px] bg-red-50 text-red-500 hover:bg-red-100 transition-colors">חסום</button>
                           )}
                           {customer.status === 'rejected' && (
-                            <button
-                              onClick={() => updateCustomer(customer.id, { status: 'approved' })}
-                              className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded hover:bg-green-200 transition-colors"
-                            >
-                              אשר מחדש
-                            </button>
+                            <button onClick={() => updateCustomer(customer.id, { status: 'approved' })} className="px-2 py-1 text-[11px] bg-green-100 text-green-700 hover:bg-green-200 transition-colors">אשר מחדש</button>
                           )}
                         </div>
                       </td>

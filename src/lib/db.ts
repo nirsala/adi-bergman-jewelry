@@ -3,6 +3,8 @@ import path from 'path';
 
 const dataDir = path.join(process.cwd(), 'data');
 
+export type CustomerGroup = 'new' | 'regular' | 'vip';
+
 export interface User {
   id: string;
   username: string;
@@ -13,6 +15,7 @@ export interface User {
   role: 'customer' | 'admin';
   status: 'pending' | 'approved' | 'rejected';
   discountPercent: number;
+  customerGroup: CustomerGroup;
   createdAt: string;
 }
 
@@ -27,6 +30,7 @@ export interface Product {
   images: string[];
   inStock: boolean;
   featured: boolean;
+  minOrderQty: number;
   createdAt: string;
 }
 
@@ -191,6 +195,69 @@ export function clearCart(userId: string): boolean {
   saveCarts(carts);
   return true;
 }
+
+// Orders (submitted carts become orders)
+export interface OrderItem {
+  productId: string;
+  nameHe: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  items: OrderItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'completed' | 'cancelled';
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export function getOrders(): Order[] {
+  try {
+    return readJson<Order[]>('orders.json');
+  } catch {
+    writeJson('orders.json', []);
+    return [];
+  }
+}
+
+export function saveOrders(orders: Order[]): void {
+  writeJson('orders.json', orders);
+}
+
+export function addOrder(order: Order): void {
+  const orders = getOrders();
+  orders.push(order);
+  saveOrders(orders);
+}
+
+export function getOrdersByUserId(userId: string): Order[] {
+  return getOrders().filter(o => o.userId === userId).sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+export function updateOrder(id: string, updates: Partial<Order>): Order | null {
+  const orders = getOrders();
+  const index = orders.findIndex(o => o.id === id);
+  if (index === -1) return null;
+  orders[index] = { ...orders[index], ...updates, updatedAt: new Date().toISOString() };
+  saveOrders(orders);
+  return orders[index];
+}
+
+// Wholesale Settings
+export const CUSTOMER_GROUP_DEFAULTS: Record<CustomerGroup, number> = {
+  new: 0,
+  regular: 10,
+  vip: 20,
+};
+
+export const MIN_ORDER_TOTAL = 1000; // ₪1,000 minimum order
 
 // Settings
 export function getSettings(): SiteSettings {

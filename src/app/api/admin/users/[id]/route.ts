@@ -14,10 +14,10 @@ export async function PATCH(
   const { id } = await params;
   const updates = await request.json();
 
-  // Only allow updating status and discountPercent
   const allowedUpdates: Record<string, unknown> = {};
   if (updates.status !== undefined) allowedUpdates.status = updates.status;
   if (updates.discountPercent !== undefined) allowedUpdates.discountPercent = Number(updates.discountPercent);
+  if (updates.customerGroup !== undefined) allowedUpdates.customerGroup = updates.customerGroup;
 
   const updated = updateUser(id, allowedUpdates);
   if (!updated) {
@@ -34,6 +34,7 @@ export async function PATCH(
       role: updated.role,
       status: updated.status,
       discountPercent: updated.discountPercent,
+      customerGroup: updated.customerGroup || 'new',
     },
   });
 }
