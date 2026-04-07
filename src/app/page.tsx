@@ -1,5 +1,6 @@
 import HeroVideo from '@/components/HeroVideo';
 import FeaturedProducts from '@/components/FeaturedProducts';
+import SeoContent from '@/components/SeoContent';
 import Link from 'next/link';
 
 const categories = [
@@ -42,10 +43,10 @@ export default function HomePage() {
       <FeaturedProducts />
 
       {/* Full-width Image Banner */}
-      <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
+      <section className="relative h-[50vh] min-h-[350px] overflow-hidden" aria-label="מויסנייט - הברק האמיתי">
         <img
           src="/images/model-store.jpg"
-          alt="Adi Bergman Studio"
+          alt="סטודיו עדי ברגמן - תכשיטי מויסנייט יוקרתיים בעבודת יד"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -63,12 +64,12 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white" aria-label="אודות עדי ברגמן - מעצבת תכשיטי מויסנייט">
         <div className="max-w-[1000px] mx-auto px-5 md:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
             <div>
               <h2 className="font-heading text-[28px] md:text-[36px] text-text mb-5">
-                אודות עדי ברגמן
+                אודות עדי ברגמן — מעצבת תכשיטי מויסנייט
               </h2>
               <div className="w-8 h-[1px] bg-accent mb-6" />
               <p className="text-text-light text-[15px] leading-[1.8] mb-4">
@@ -102,6 +103,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* FAQ / SEO Content */}
+      <SeoContent />
 
       {/* Wholesale CTA */}
       <section className="py-16 md:py-20 bg-[#f5f0ec]">
