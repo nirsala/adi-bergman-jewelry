@@ -14,10 +14,7 @@ interface Product {
 }
 
 const placeholderImages: Record<string, string> = {
-  rings: '💍',
-  necklaces: '📿',
-  earrings: '✨',
-  bracelets: '⌚',
+  rings: '💍', necklaces: '📿', earrings: '✨', bracelets: '⌚',
 };
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -35,15 +32,24 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   const price = getPrice();
+  const realImage = product.images?.find(img => img && !img.includes('placeholder'));
 
   return (
     <Link href={`/products/${product.id}`} className="group block">
       <div className="overflow-hidden">
         {/* Image */}
         <div className="relative aspect-square bg-[#f5f0ec] flex items-center justify-center overflow-hidden">
-          <span className="text-6xl opacity-30 group-hover:scale-105 transition-transform duration-700 ease-out">
-            {placeholderImages[product.category] || '💎'}
-          </span>
+          {realImage ? (
+            <img
+              src={realImage}
+              alt={product.nameHe}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            />
+          ) : (
+            <span className="text-6xl opacity-30 group-hover:scale-105 transition-transform duration-700 ease-out">
+              {placeholderImages[product.category] || '💎'}
+            </span>
+          )}
           {!product.inStock && (
             <span className="absolute top-3 right-3 text-[11px] px-3 py-1 bg-white/80 text-text-muted tracking-wide uppercase">
               אזל

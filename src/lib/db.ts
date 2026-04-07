@@ -121,6 +121,77 @@ export function deleteProduct(id: string): boolean {
   return true;
 }
 
+// Cart
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
+
+export interface Cart {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  updatedAt: string;
+  status: 'active' | 'submitted';
+}
+
+export function getCarts(): Cart[] {
+  try {
+    return readJson<Cart[]>('carts.json');
+  } catch {
+    writeJson('carts.json', []);
+    return [];
+  }
+}
+
+export function saveCarts(carts: Cart[]): void {
+  writeJson('carts.json', carts);
+}
+
+export function getCartByUserId(userId: string): Cart | undefined {
+  return getCarts().find(c => c.userId === userId && c.status === 'active');
+}
+
+export function upsertCart(userId: string, items: CartItem[]): Cart {
+  const carts = getCarts();
+  const index = carts.findIndex(c => c.userId === userId && c.status === 'active');
+  if (index !== -1) {
+    carts[index].items = items;
+    carts[index].updatedAt = new Date().toISOString();
+    saveCarts(carts);
+    return carts[index];
+  }
+  const newCart: Cart = {
+    id: require('uuid').v4(),
+    userId,
+    items,
+    updatedAt: new Date().toISOString(),
+    status: 'active',
+  };
+  carts.push(newCart);
+  saveCarts(carts);
+  return newCart;
+}
+
+export function submitCart(userId: string): Cart | null {
+  const carts = getCarts();
+  const index = carts.findIndex(c => c.userId === userId && c.status === 'active');
+  if (index === -1) return null;
+  carts[index].status = 'submitted';
+  carts[index].updatedAt = new Date().toISOString();
+  saveCarts(carts);
+  return carts[index];
+}
+
+export function clearCart(userId: string): boolean {
+  const carts = getCarts();
+  const index = carts.findIndex(c => c.userId === userId && c.status === 'active');
+  if (index === -1) return false;
+  carts.splice(index, 1);
+  saveCarts(carts);
+  return true;
+}
+
 // Settings
 export function getSettings(): SiteSettings {
   return readJson<SiteSettings>('settings.json');

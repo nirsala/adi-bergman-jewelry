@@ -4,10 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const { cart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const showCart = user && user.role === 'customer' && user.status === 'approved';
 
   return (
     <>
@@ -55,6 +58,18 @@ export default function Header() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </Link>
+                  {showCart && (
+                    <Link href="/cart" className="relative" title="עגלה">
+                      <svg className="w-5 h-5 text-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                      </svg>
+                      {cart.itemCount > 0 && (
+                        <span className="absolute -top-2 -right-2 w-4 h-4 bg-accent text-white text-[10px] rounded-full flex items-center justify-center">
+                          {cart.itemCount}
+                        </span>
+                      )}
+                    </Link>
+                  )}
                   <button onClick={logout} className="text-[12px] text-text-muted hover:text-accent transition-colors">
                     התנתק
                   </button>

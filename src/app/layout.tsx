@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import JsonLd from "@/components/JsonLd";
+import { CartProvider } from "@/contexts/CartContext";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://adibergman.com';
 
@@ -99,9 +100,11 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-white text-text font-body">
         <JsonLd />
         <AuthProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <CartProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

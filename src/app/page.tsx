@@ -119,7 +119,7 @@ export default function HomePage() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/register" className="btn-primary">
-              הרשמה כלקוח
+              הרשמה כסיטונאי
             </Link>
             <Link href="/products" className="btn-outline">
               לקולקציה
