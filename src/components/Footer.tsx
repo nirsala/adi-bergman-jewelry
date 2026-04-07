@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -7,9 +8,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <div className="font-heading text-[24px] tracking-[0.15em] mb-4">
-              ADI<span className="text-accent mx-1">&#x2726;</span>BERGMAN
-            </div>
+            <Image
+              src="/images/logo-gold.png"
+              alt="Adi Bergman"
+              width={200}
+              height={80}
+              className="h-[60px] w-auto object-contain mb-4 brightness-110"
+            />
             <p className="text-[13px] text-[#9b9b9b] leading-relaxed">
               תכשיטי מויסנייט יוקרתיים בעיצוב אישי.
               <br />ברק של יהלום, איכות ללא פשרות.

@@ -42,21 +42,17 @@ export default function HomePage() {
       <FeaturedProducts />
 
       {/* Full-width Image Banner */}
-      <section className="relative h-[50vh] min-h-[350px] bg-[#e8e0d8] overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-float opacity-15">
-            <svg width="200" height="200" viewBox="0 0 300 300" fill="none">
-              <ellipse cx="150" cy="200" rx="80" ry="30" stroke="#e6907f" strokeWidth="2" fill="none" />
-              <polygon points="150,80 180,130 150,160 120,130" fill="none" stroke="#e6907f" strokeWidth="1.5" />
-              <line x1="135" y1="155" x2="130" y2="185" stroke="#e6907f" strokeWidth="1.5" />
-              <line x1="165" y1="155" x2="170" y2="185" stroke="#e6907f" strokeWidth="1.5" />
-            </svg>
-          </div>
-        </div>
+      <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
+        <img
+          src="/images/model-store.jpg"
+          alt="Adi Bergman Studio"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30" />
         <div className="relative h-full flex items-center justify-center z-10">
           <div className="text-center px-5">
-            <h2 className="font-heading text-[32px] md:text-[48px] text-text mb-4">מויסנייט — הברק האמיתי</h2>
-            <p className="text-text-light text-[15px] max-w-md mx-auto mb-8">
+            <h2 className="font-heading text-[32px] md:text-[48px] text-white mb-4">מויסנייט — הברק האמיתי</h2>
+            <p className="text-white/80 text-[15px] max-w-md mx-auto mb-8">
               אבן חן בעלת מדד שבירה גבוה מיהלום, המעניקה זוהר וניצוצות ברמה שאין שני לה
             </p>
             <Link href="/products" className="btn-primary">
@@ -96,11 +92,12 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="aspect-[4/5] bg-[#f5f0ec] rounded-sm flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-7xl mb-3 opacity-30">💎</div>
-                <p className="text-text-muted text-[13px]">תמונת הסטודיו של עדי</p>
-              </div>
+            <div className="relative aspect-[4/5] rounded-sm overflow-hidden">
+              <img
+                src="/images/model-necklace.jpg"
+                alt="תכשיטי מויסנייט — עדי ברגמן"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>

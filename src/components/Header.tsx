@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -30,9 +31,14 @@ export default function Header() {
 
             {/* Center: Logo */}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2">
-              <h1 className="font-heading text-[28px] md:text-[34px] tracking-[0.15em] text-text whitespace-nowrap">
-                ADI<span className="text-accent mx-1">&#x2726;</span>BERGMAN
-              </h1>
+              <Image
+                src="/images/logo-black.png"
+                alt="Adi Bergman Moissanite Jewelry"
+                width={170}
+                height={70}
+                className="h-[45px] md:h-[55px] w-auto object-contain"
+                priority
+              />
             </Link>
 
             {/* Left: Icons */}
